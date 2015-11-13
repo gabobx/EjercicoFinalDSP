@@ -45,17 +45,11 @@
 #include "arm_math.h"
 
 /* Exported types ------------------------------------------------------------*/
-typedef enum
-{
-  AUDIO_FILTER_FILTER_SEL_LOW_PASS = 0,
-  AUDIO_FILTER_FILTER_SEL_HIGH_PASS,
-  AUDIO_FILTER_TOTAL_FILTERS,
-}audioFilter_filterSel_enum;
+
 
 /* Exported constants --------------------------------------------------------*/                                                                                    
 /* Exported macro ------------------------------------------------------------*/
 
-#define AUDIO_FILTER_LP_44100_9600_12000_16_STEREO
 
 /* Exported functions ------------------------------------------------------- */
 
@@ -75,7 +69,6 @@ extern void audioFilter_init(void);
   */
 extern void audioFilter_filter(q15_t *src, q15_t *dest, uint32_t length);
 
-extern void audioFilter_filterSel(audioFilter_filterSel_enum sel);
 
 #endif /* AUDIO_FILTER_H */
 

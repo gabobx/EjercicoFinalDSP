@@ -47,6 +47,9 @@
 #include "usbh_diskio.h"
 #include "main.h"
 #include "audioFilter.h"
+#include "utils.h"
+
+
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum
@@ -63,7 +66,11 @@ typedef enum
 static FATFS USBDISKFatFs;           /* File system object for USB disk logical drive */
 static char USBDISKPath[4];          /* USB Host logical drive path */
 static appState_enum appState = APPSTATE_IDLE;
-static audioFilter_filterSel_enum filterSel = AUDIO_FILTER_FILTER_SEL_LOW_PASS;
+
+uint16_t conteo=0;
+uint16_t led3on=0;
+uint16_t primpulso=1;
+
 
 /* Variable used by FatFs*/
 static FIL FileRead;
@@ -72,11 +79,37 @@ static FIL FileRead;
 /* Private functions ---------------------------------------------------------*/
 int32_t getDataCB(int16_t *pBuff, int32_t length)
 {
+	
+	q15_t rms;
+	
   UINT bytesread = 0;
   
   f_read(&FileRead, pBuff, length*sizeof(int16_t), (void *)&bytesread); 
   
   audioFilter_filter(pBuff, pBuff, bytesread/sizeof(int16_t));
+	
+	arm_rms_q15(pBuff,bytesread/sizeof(int16_t),&rms);
+	
+	printf("valor rms: %u \n",rms);
+	if(rms>1000){
+		if((conteo<5)&(led3on==0)){
+			if(TickTock_Get() > 700000){
+				TickTock_Start();
+				BSP_LED_On(LED6);
+				conteo++;
+				primpulso=0;
+			}
+		}else if((conteo==5) & (TickTock_Get() > 800000)){
+			TickTock_Start();
+			BSP_LED_On(LED3);
+			primpulso=1;
+			conteo=0;
+			led3on=1;
+		}
+	}else{
+		LEDsState = LEDS_OFF;
+		led3on=0;
+	}
   
   return bytesread;
 }
@@ -84,13 +117,16 @@ int32_t getDataCB(int16_t *pBuff, int32_t length)
 
 extern void application_init(void)
 {
+	
   /*##-1- Link the USB Host disk I/O driver ##################################*/
   if(FATFS_LinkDriver(&USBH_Driver, USBDISKPath) != 0)
   {
     Error_Handler();
   }
-  
+	
+  TickTock_Init();
   audioFilter_init();
+
 }
 
 extern void application_task(void)
@@ -151,13 +187,6 @@ extern void application_task(void)
         
         f_close(&FileRead);
         
-        /* selecciona siguiente filtro */
-        filterSel++;
-        if (AUDIO_FILTER_TOTAL_FILTERS <= filterSel)
-        {
-          filterSel = AUDIO_FILTER_FILTER_SEL_LOW_PASS;
-        }
-        audioFilter_filterSel(filterSel);
       }
       break;
     
@@ -177,4 +206,5 @@ extern void application_disconect(void)
 }
 
 /* End of file ---------------------------------------------------------------*/
+
 

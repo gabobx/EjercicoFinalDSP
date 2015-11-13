@@ -45,13 +45,13 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/                                                                                    
 /* Exported macro ------------------------------------------------------------*/
-/* \brief nombre del archivo de audio sin extensión */
-#define WAVE_NAME 							"audioOut50-1000"
+/* \brief nombre del archivo de audio sin extensiÃ³n */
+#define WAVE_NAME 							"TPF_Noise"
 
-/* \brief nombre del archivo de audio con extensión y path (no modificar)*/
+/* \brief nombre del archivo de audio con extensiÃ³n y path (no modificar)*/
 #define WAVE_NAME_COMPLETO 			"0:"WAVE_NAME".wav"
 
-/* \brief nombre del archivo de audio grabado con extensión y path (no modificar)*/
+/* \brief nombre del archivo de audio grabado con extensiÃ³n y path (no modificar)*/
 #define REC_WAVE_NAME_COMPLETO	"0:"WAVE_NAME"-REC.wav"
 
 /* Exported functions ------------------------------------------------------- */

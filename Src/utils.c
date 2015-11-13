@@ -27,3 +27,8 @@ void TickTock_Stop(void)
 	TockValue=__HAL_TIM_GetCounter(&TIM_Handle);
 	printf("Tiempo transcurrido: %u uS\n",TockValue);
 }
+uint32_t TickTock_Get(void){
+	uint32_t	TockValue;
+	TockValue=__HAL_TIM_GetCounter(&TIM_Handle);
+	return TockValue;
+}

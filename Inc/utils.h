@@ -14,5 +14,6 @@
 void TickTock_Init(void);
 void TickTock_Start(void);
 void TickTock_Stop(void);
+uint32_t TickTock_Get(void);
 
 #endif /* __UTILS_H */

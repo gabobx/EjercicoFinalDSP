@@ -42,37 +42,23 @@
 #include "arm_math.h"
 #include "filters.h"
 
-/* Private typedef -----------------------------------------------------------*/
-typedef struct
-{
-  const q15_t *pCoeff;
-  int32_t length;
-}dataFilter_type;
-
 /* Private define ------------------------------------------------------------*/
 #define BLOCK_SIZE            1
 
 /* Private variables ---------------------------------------------------------*/
 static q15_t firStateI16[BLOCK_SIZE + FILTER_MAX_LENGHT];
 static arm_fir_instance_q15 firInstance;
-static const dataFilter_type dataFilters[AUDIO_FILTER_TOTAL_FILTERS] =
-{
-  {
-    lp16000_50_1000,
-    LP_FS16000_50_1000_LENGTH,
-  },
-  {
-    hp16000_1000_50,
-    HP_FS16000_1000_50_LENGTH,
-  },
-};
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 extern void audioFilter_init(void)
 {
-	audioFilter_filterSel(AUDIO_FILTER_FILTER_SEL_LOW_PASS);
+	 arm_fir_init_q15(&firInstance, 
+		BP_LENGTH,
+		(q15_t*)bp,
+		(q15_t*)&firStateI16, 
+		BLOCK_SIZE);
 }
 
 extern void audioFilter_filter(q15_t *src, q15_t *dest, uint32_t length)
@@ -84,17 +70,6 @@ extern void audioFilter_filter(q15_t *src, q15_t *dest, uint32_t length)
     arm_fir_q15(&firInstance, &src[i], &dest[i], BLOCK_SIZE);
 	}
 }
-
-extern void audioFilter_filterSel(audioFilter_filterSel_enum sel)
-{
-	/* inicializa la estructura del filtro. */
-  arm_fir_init_q15(&firInstance, 
-		dataFilters[sel].length,
-		(q15_t*)dataFilters[sel].pCoeff,
-		(q15_t*)&firStateI16, 
-		BLOCK_SIZE);
-}
-
 
 
 /* End of file ---------------------------------------------------------------*/

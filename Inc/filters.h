@@ -3,12 +3,10 @@
 #include "arm_math.h"
 
 /* Exported define -----------------------------------------------------------*/
-#define LP_FS16000_50_1000_LENGTH 	64
-#define HP_FS16000_1000_50_LENGTH   64
-#define FILTER_MAX_LENGHT           64
+#define BP_LENGTH 									100
+#define FILTER_MAX_LENGHT           100
 
 /* Exported data -------------------------------------------------------------*/
-extern const q15_t lp16000_50_1000[]; 
-extern const q15_t hp16000_1000_50[];
+extern const q15_t bp[]; 
 
 /* End of file ---------------------------------------------------------------*/
